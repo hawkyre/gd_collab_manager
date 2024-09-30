@@ -23,7 +23,7 @@ defmodule GdCollabManager.Collabs do
         join: cp in assoc(c, :collab_participants),
         where: cp.user_id == ^user.id
     )
-    |> Repo.preload([:collab_participants])
+    |> Repo.preload(collab_participants: [:user])
   end
 
   @spec get_user_collabs(GdCollabManager.Accounts.User.t()) :: Collab.t() | nil
@@ -33,7 +33,7 @@ defmodule GdCollabManager.Collabs do
         join: cp in assoc(c, :collab_participants),
         where: cp.user_id == ^user.id and c.id == ^collab_id
     )
-    |> Repo.preload([:participants, :tags, to_do_items: [:tags, :responsibles]])
+    |> Repo.preload([:tags, to_do_items: [:tags, :responsibles], collab_participants: [:user]])
     |> List.first()
   end
 
@@ -44,7 +44,7 @@ defmodule GdCollabManager.Collabs do
   def create_collab(host_id, attrs \\ %{}) do
     participants_assoc =
       [%{role: "host", user_id: host_id}] ++
-        (attrs |> Map.get("users") |> Enum.map(&%{role: "member", user_id: &1}))
+        (attrs |> Map.get("users", []) |> Enum.map(&%{role: "member", user_id: &1}))
 
     attrs = Map.put(attrs, "collab_participants", participants_assoc)
 

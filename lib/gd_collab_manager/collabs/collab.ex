@@ -10,7 +10,7 @@ defmodule GdCollabManager.Collabs.Collab do
              :name,
              :description,
              :image_url,
-             :participants,
+             :collab_participants,
              :to_do_items,
              :inserted_at,
              :updated_at,
@@ -40,6 +40,8 @@ defmodule GdCollabManager.Collabs.Collab do
     |> cast(attrs, [:name, :description, :image_url])
     |> cast_assoc(:collab_participants, with: &CollabParticipant.changeset/2)
     |> validate_required([:name])
+    |> validate_length(:name, max: 100)
+    |> validate_length(:description, max: 300)
     |> validate_has_at_least_one_host()
   end
 
