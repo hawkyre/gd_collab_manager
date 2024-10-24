@@ -17,7 +17,7 @@ defmodule GdCollabManagerWeb.CoreComponents do
   use Phoenix.Component
 
   alias Phoenix.LiveView.JS
-  import GdCollabManagerWeb.Gettext
+  use Gettext, backend: GdCollabManagerWeb.Gettext
 
   @doc """
   Renders a modal.
@@ -260,8 +260,8 @@ defmodule GdCollabManagerWeb.CoreComponents do
   attr :multiple, :boolean, default: false, doc: "the multiple flag for select inputs"
 
   attr :rest, :global,
-    include: ~w(accept autocomplete capture cols disabled form list max maxlength min minlength
-                multiple pattern placeholder readonly required rows size step)
+    include:
+      ~w(accept autocomplete capture cols disabled form list max maxlength min minlength multiple pattern placeholder readonly required rows size step)
 
   def input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     errors = if Phoenix.Component.used_input?(field), do: field.errors, else: []
@@ -349,7 +349,7 @@ defmodule GdCollabManagerWeb.CoreComponents do
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
-          "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
+          "mt-1 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm",
           @errors == [] && "border-zinc-300 focus:border-zinc-400",
           @errors != [] && "border-rose-400 focus:border-rose-400"
         ]}
@@ -368,7 +368,7 @@ defmodule GdCollabManagerWeb.CoreComponents do
 
   def label(assigns) do
     ~H"""
-    <label for={@for} class="block text-sm font-semibold leading-6 text-zinc-800">
+    <label for={@for} class="block text-sm font-semibold text-zinc-800">
       <%= render_slot(@inner_block) %>
     </label>
     """

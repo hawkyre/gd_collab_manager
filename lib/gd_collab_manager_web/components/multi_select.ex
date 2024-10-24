@@ -15,11 +15,14 @@ defmodule GdCollabManagerWeb.MultiSelectComponent do
     {:ok, socket}
   end
 
+  def search_input_name(id), do: "__" <> id <> "-track-input"
+  def option_container_id(id), do: "__" <> id <> "-track-input"
+
   @impl true
   def update(assigns, socket) do
     {:ok,
      assign(socket, assigns)
-     |> assign(:search_name, "__" <> assigns.id <> "-track-input")
+     |> assign(:search_name, search_input_name(assigns.id))
      |> assign(
        :filtered_options,
        if(not Map.has_key?(assigns, :length_threshold) or assigns.length_threshold == 0,
@@ -60,7 +63,7 @@ defmodule GdCollabManagerWeb.MultiSelectComponent do
       <.label :if={Map.has_key?(assigns, :label)} for={@id}><%= @label %></.label>
       
       <div class={[
-        "flex flex-wrap gap-1 mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6 border-zinc-300 focus:border-zinc-400 max-w-[100%]"
+        "flex flex-wrap gap-1 mt-1 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm border-zinc-300 focus:border-zinc-400 max-w-[100%]"
       ]}>
         <%= for option_id <- @selected do %>
           <span class="text-sm text-zinc-700 rounded-md bg-zinc-100 px-2 py-1">
@@ -78,11 +81,13 @@ defmodule GdCollabManagerWeb.MultiSelectComponent do
           phx-target={@myself}
           phx-focus="input_focus"
           type="text"
+          autocomplete="off"
         />
         <div class="relative" phx-target={@myself}>
           <div
             :if={@can_select and length(@filtered_options) > 0 and @focused}
-            class="bg-white absolute mt-2 rounded-md border border-zinc-300 divide-y divide-zinc-200 overflow-y-scroll max-h-[200px] w-full max-w-[100%] shadow-md"
+            id={option_container_id(@id)}
+            class="bg-white absolute mt-2 rounded-md border border-zinc-300 divide-y divide-zinc-200 overflow-y-auto max-h-[200px] w-full max-w-[100%] shadow-md"
           >
             <%= for %{id: option_id, label: label} <- @filtered_options do %>
               <button

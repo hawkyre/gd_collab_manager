@@ -20,5 +20,5 @@ defmodule GdCollabManagerWeb.Gettext do
 
   See the [Gettext Docs](https://hexdocs.pm/gettext) for detailed usage.
   """
-  use Gettext, otp_app: :gd_collab_manager
+  use Gettext.Backend, otp_app: :gd_collab_manager
 end

@@ -33,7 +33,12 @@ defmodule GdCollabManager.Collabs do
         join: cp in assoc(c, :collab_participants),
         where: cp.user_id == ^user.id and c.id == ^collab_id
     )
-    |> Repo.preload([:tags, to_do_items: [:tags, :responsibles], collab_participants: [:user]])
+    |> Repo.preload([
+      :tags,
+      to_do_items: [:tags, :responsibles],
+      collab_participants: [:user],
+      parts: [to_do_item: [:tags, :responsibles]]
+    ])
     |> List.first()
   end
 
@@ -51,5 +56,13 @@ defmodule GdCollabManager.Collabs do
     Collab.new()
     |> Collab.changeset(attrs)
     |> Repo.insert()
+  end
+
+  @doc """
+  Generates a topic for a collab (primarily used for pubsub).
+  """
+  @spec generate_collab_topic(Collab.t()) :: String.t()
+  def generate_collab_topic(collab) do
+    "collab:#{collab.id}"
   end
 end

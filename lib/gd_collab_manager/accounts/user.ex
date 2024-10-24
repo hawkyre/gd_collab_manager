@@ -4,6 +4,7 @@ defmodule GdCollabManager.Accounts.User do
 
   @type t :: %__MODULE__{}
 
+  @derive {Jason.Encoder, only: [:username, :email]}
   schema "users" do
     field :username, :string
     field :email, :string

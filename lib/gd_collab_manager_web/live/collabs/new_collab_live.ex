@@ -24,8 +24,9 @@ defmodule GdCollabManagerWeb.Collabs.NewCollabLive do
     ~H"""
     <h1>Create new collab</h1>
 
-    <.simple_form :let={f} for={@collab} phx-submit="save" phx-change="validate">
-      <.input field={f[:name]} label="Name" /> <.input field={f[:description]} label="Description" />
+    <.simple_form :let={f} for={@collab} phx-submit="save" phx-change="validate" id="new-collab-form">
+      <.input field={f[:name]} name="name" label="Name" />
+      <.input field={f[:description]} name="description" label="Description" />
       <.live_component
         module={MultiSelectComponent}
         id="user-select"

@@ -33,6 +33,8 @@ defmodule GdCollabManager.ToDo.ToDoItem do
     many_to_many :responsibles, GdCollabManager.Accounts.User,
       join_through: GdCollabManager.ToDo.ToDoItemResponsible
 
+    has_one :collab_part, GdCollabManager.CollabTools.Parts.CollabPart
+
     timestamps()
   end
 

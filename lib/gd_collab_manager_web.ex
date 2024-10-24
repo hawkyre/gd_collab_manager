@@ -83,11 +83,15 @@ defmodule GdCollabManagerWeb do
     quote do
       # HTML escaping functionality
       import Phoenix.HTML
+
       # Core UI components and translation
       import GdCollabManagerWeb.CoreComponents
-      import GdCollabManagerWeb.Buttons
       import GdCollabManagerWeb.Gettext
       import GdCollabManagerWeb.Utils.PubSubUtils
+
+      # Custom components
+      import GdCollabManagerWeb.Buttons
+      import GdCollabManagerWeb.Text.Headers
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS

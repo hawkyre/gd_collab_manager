@@ -52,7 +52,7 @@ defmodule GdCollabManagerWeb.Buttons do
     doc: "The button variant to use."
 
   attr :size, :string,
-    values: ~w(default sm lg icon),
+    values: ~w(default sm lg icon icon-small),
     default: "default",
     doc: "The button size to use."
 
@@ -82,6 +82,7 @@ defmodule GdCollabManagerWeb.Buttons do
       "sm" => "rounded-md px-3 text-xs",
       "lg" => "rounded-md px-8",
       "icon" => "h-9 w-9 flex items-center justify-center",
+      "icon-small" => "h-6 w-6 flex items-center justify-center",
       "link" => ""
     }
   }

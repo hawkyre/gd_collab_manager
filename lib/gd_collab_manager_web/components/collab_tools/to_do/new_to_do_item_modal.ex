@@ -1,4 +1,5 @@
 defmodule GdCollabManagerWeb.CollabTools.ToDo.NewToDoItemModal do
+  alias GdCollabManager.Utils.DateUtils
   alias GdCollabManager.ToDoLists
   alias GdCollabManager.CollabTools.ToDo.NewToDoItem
   use GdCollabManagerWeb, :live_component
@@ -93,6 +94,18 @@ defmodule GdCollabManagerWeb.CollabTools.ToDo.NewToDoItemModal do
             />
           </div>
           
+          <div>
+            <p class="text-sm font-semibold -mb-1">Select users for the task</p>
+            
+            <.live_component
+              module={GdCollabManagerWeb.MultiSelectComponent}
+              id="multi-select-responsibles"
+              class="w-full"
+              name="responsibles"
+              options={@collab.collab_participants |> Enum.map(&transform_participant_to_option/1)}
+            />
+          </div>
+          
           <.button>
             <p>Add new item</p>
           </.button>
@@ -118,9 +131,9 @@ defmodule GdCollabManagerWeb.CollabTools.ToDo.NewToDoItemModal do
         title: title,
         creator_id: socket.assigns.current_user.id,
         collab_id: socket.assigns.collab.id,
-        to_do_item_tags:
-          params["tags"] |> Jason.decode!() |> Enum.map(&transform_tag_id_to_item_tag/1),
-        due_by: format_due_date(params)
+        to_do_item_tags: create_tags(params),
+        to_do_item_responsibles: create_responsibles(params, socket.assigns.collab.id),
+        due_by: DateUtils.format_due_date(params)
       }
       |> ToDoLists.create_to_do()
 
@@ -186,34 +199,32 @@ defmodule GdCollabManagerWeb.CollabTools.ToDo.NewToDoItemModal do
     {:noreply, assign(socket, user_list: [])}
   end
 
-  defp format_due_date(%{"due_day" => ""}), do: nil
-  defp format_due_date(%{"due_month" => ""}), do: nil
-  defp format_due_date(%{"due_year" => ""}), do: nil
-
-  defp format_due_date(%{"due_day" => day, "due_month" => month, "due_year" => year})
-       when is_binary(day) and is_binary(month) and is_binary(year) do
-    format_due_date(%{
-      "due_day" => day |> String.to_integer(),
-      "due_month" => month |> String.to_integer(),
-      "due_year" => year |> String.to_integer()
-    })
+  defp create_responsibles(params, collab_id) do
+    params["responsibles"]
+    |> Jason.decode!()
+    |> Enum.map(&transform_responsible_id_to_item_responsible(&1, collab_id))
   end
 
-  defp format_due_date(%{"due_day" => day, "due_month" => month, "due_year" => year}) do
-    case NaiveDateTime.new(year, month, day, 0, 0, 0) do
-      {:ok, date} -> date
-      _ -> nil
-    end
+  defp create_tags(params) do
+    params["tags"]
+    |> Jason.decode!()
+    |> Enum.map(&transform_tag_id_to_item_tag/1)
   end
-
-  defp format_due_date(_), do: nil
 
   defp transform_tag_id_to_item_tag(tag_id) do
     %{tag_id: tag_id}
   end
 
+  defp transform_responsible_id_to_item_responsible(responsible_id, collab_id) do
+    %{user_id: responsible_id, collab_id: collab_id}
+  end
+
   defp transform_tag_to_option(tag) do
     %{id: tag.id, label: tag.tag}
+  end
+
+  defp transform_participant_to_option(participant) do
+    %{id: participant.user_id, label: participant.user.username}
   end
 end
 

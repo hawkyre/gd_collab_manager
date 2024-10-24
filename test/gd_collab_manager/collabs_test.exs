@@ -72,7 +72,7 @@ defmodule GdCollabManager.CollabsTest do
       user = GdCollabManager.AccountsFixtures.user_fixture()
 
       1..3
-      |> Enum.each(fn i ->
+      |> Enum.each(fn _ ->
         collab_fixture(%{"host_id" => user.id})
       end)
 
@@ -88,7 +88,7 @@ defmodule GdCollabManager.CollabsTest do
       assert Enum.count(GdCollabManager.Collabs.get_user_collabs(user)) == 0
 
       1..3
-      |> Enum.each(fn i ->
+      |> Enum.each(fn _ ->
         collab_fixture(%{"host_id" => host.id, "users" => [user.id]})
       end)
 

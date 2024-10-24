@@ -4,7 +4,7 @@ defmodule GdCollabManagerWeb.Collabs.CollabInstanceLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <h1 class="text-3xl font-semibold mb-4"><%= @collab.name %></h1>
+    <.h1><%= @collab.name %></.h1>
 
     <div>
       <%= live_render(@socket, GdCollabManagerWeb.CollabTools.ToDoListLive,

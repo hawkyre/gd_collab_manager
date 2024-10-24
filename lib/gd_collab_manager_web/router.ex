@@ -18,7 +18,7 @@ defmodule GdCollabManagerWeb.Router do
   end
 
   scope "/", GdCollabManagerWeb do
-    pipe_through :browser
+    pipe_through [:browser, :redirect_if_user_is_authenticated]
 
     get "/", PageController, :home
   end
@@ -73,6 +73,9 @@ defmodule GdCollabManagerWeb.Router do
       live "/my-collabs/new", Collabs.NewCollabLive
 
       live "/my-collabs/:collab_id", Collabs.CollabInstanceLive
+
+      live "/my-collabs/:collab_id/parts", CollabTools.CollabPartsLive, :index
+      live "/my-collabs/:collab_id/parts/new", CollabTools.CollabPartsLive, :new
     end
   end
 

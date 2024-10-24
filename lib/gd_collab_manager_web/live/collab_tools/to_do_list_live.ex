@@ -1,11 +1,12 @@
 defmodule GdCollabManagerWeb.CollabTools.ToDoListLive do
+  alias GdCollabManager.Collabs
   alias GdCollabManager.CollabTools.ToDo.NewToDoItem
   alias GdCollabManager.ToDoLists
   use GdCollabManagerWeb, :live_view
 
   @impl true
   def mount(_params, session, socket) do
-    topic = generate_collab_topic(session["collab"])
+    topic = Collabs.generate_collab_topic(session["collab"])
     subscribe_to_topic(topic)
 
     {:ok,
@@ -22,7 +23,7 @@ defmodule GdCollabManagerWeb.CollabTools.ToDoListLive do
   def render(assigns) do
     ~H"""
     <div>
-      <h1 class="text-xl font-semibold mb-2">To-do list</h1>
+      <.h1 class="mb-2">To-do list</.h1>
       
       <.button phx-click={show_modal("new-item-modal")} class="mb-4">
         Add new item
@@ -34,7 +35,7 @@ defmodule GdCollabManagerWeb.CollabTools.ToDoListLive do
             module={GdCollabManagerWeb.CollabTools.ToDo.ToDoItem}
             id={item.id}
             item={item}
-            creators={@collab.participants}
+            creators={@collab.collab_participants}
           />
         <% end %>
       </div>
@@ -103,9 +104,5 @@ defmodule GdCollabManagerWeb.CollabTools.ToDoListLive do
             if item.id == new_to_do.id, do: Map.merge(item, new_to_do), else: item
           end)
     }
-  end
-
-  defp generate_collab_topic(collab) do
-    "collab:#{collab.id}"
   end
 end

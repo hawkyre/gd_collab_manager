@@ -14,7 +14,8 @@ defmodule GdCollabManager.Collabs.Collab do
              :to_do_items,
              :inserted_at,
              :updated_at,
-             :tags
+             :tags,
+             :parts
            ]}
   schema "collabs" do
     field :name, :string
@@ -23,6 +24,7 @@ defmodule GdCollabManager.Collabs.Collab do
     has_many :collab_participants, CollabParticipant, on_delete: :delete_all
     has_many :to_do_items, GdCollabManager.ToDo.ToDoItem, on_delete: :delete_all
     has_many :tags, GdCollabManager.ToDo.Tag, on_delete: :delete_all
+    has_many :parts, GdCollabManager.CollabTools.Parts.CollabPart, on_delete: :delete_all
 
     many_to_many :participants, GdCollabManager.Accounts.User, join_through: CollabParticipant
 

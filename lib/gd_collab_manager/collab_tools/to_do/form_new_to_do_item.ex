@@ -10,6 +10,7 @@ defmodule GdCollabManager.CollabTools.ToDo.NewToDoItem do
     field :due_year, :string
     field :due_date, :utc_datetime
     field :tags, :string
+    field :users, :string
   end
 
   def new do
@@ -20,7 +21,8 @@ defmodule GdCollabManager.CollabTools.ToDo.NewToDoItem do
       due_month: "#{today.month}",
       due_year: today.year,
       due_date: today,
-      tags: "[]"
+      tags: "[]",
+      users: "[]"
     }
   end
 
@@ -31,6 +33,7 @@ defmodule GdCollabManager.CollabTools.ToDo.NewToDoItem do
     |> validate_length(:title, min: 1, max: 100)
     |> validate_due_date()
     |> validate_tags()
+    |> validate_users()
   end
 
   def validate_tags(changeset) do
@@ -41,6 +44,21 @@ defmodule GdCollabManager.CollabTools.ToDo.NewToDoItem do
              |> Enum.all?(&is_integer/1) do
           true -> changeset
           false -> raise "Tags must be a list of integers"
+        end
+
+      _ ->
+        changeset
+    end
+  end
+
+  def validate_users(changeset) do
+    case changeset do
+      %{changes: %{users: users}} ->
+        case users
+             |> Jason.decode!()
+             |> Enum.all?(&is_integer/1) do
+          true -> changeset
+          false -> raise "Users must be a list of integers"
         end
 
       _ ->

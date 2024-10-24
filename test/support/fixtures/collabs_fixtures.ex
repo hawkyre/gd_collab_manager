@@ -5,10 +5,10 @@ defmodule GdCollabManager.CollabsFixtures do
   """
   alias GdCollabManager.Repo
 
-  def unique_collab_name, do: "user#{System.unique_integer()}@example.com"
+  def unique_collab_name, do: "collab#{System.unique_integer()}"
 
   def valid_collab_description,
-    do: "this is the collab's description"
+    do: "this is the collab's description, just a generic one"
 
   def valid_collab_attributes(attrs \\ %{})
 
